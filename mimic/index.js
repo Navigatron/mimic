@@ -32,7 +32,8 @@ console.log("\n=== Mimic! ===\n");
 
 let db;
 try {
-	db = fs.readFileSync(config.database);
+	let file = fs.readFileSync(config.database);
+	db = JSON.parse(file);
 	// If we get here, we've loaded the db.
 	// Make a backup, so if we fuck this up, we can recover.
 	fs.copyFile(config.database, config.database+".backup", (err) => {
@@ -51,7 +52,7 @@ try {
 // Prepare everything needed to save the database file
 
 function save(){
-	fs.writeFile(config["database"], db, function(err) {
+	fs.writeFile(config["database"], JSON.stringify(db), function(err) {
 	    if (err) {
 	        console.error(err);
 	    }

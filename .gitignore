@@ -1,3 +1,4 @@
 mimic/node_modules/
 mimic/node_modules/*
 mimic/key.json
+mimic/db.json

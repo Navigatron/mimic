@@ -64,14 +64,14 @@ function save_timer(){
 }
 
 process.on('SIGINT', function() {
-    if(config[save-on-ctrlc]){
+    if(config["save-on-ctrlc"]){
 		console.log("CTRL+C detected, saving DB");
 		save();
 	}
     process.exit();
 });
 
-if(configuration["auto-save"]){
+if(config["auto-save"]){
 	setTimeout(save_timer, config["auto-save-interval"]*1000);
 }
 

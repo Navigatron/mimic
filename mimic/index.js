@@ -32,8 +32,8 @@ console.log("\n=== Mimic! ===\n");
 
 let db;
 try {
-	let file = fs.readFileSync(config.database);
-	db = JSON.parse(file);
+	let file_contents = fs.readFileSync(config.database);
+	db = JSON.parse(file_contents);
 	// If we get here, we've loaded the db.
 	// Make a backup, so if we fuck this up, we can recover.
 	fs.copyFile(config.database, config.database+".backup", (err) => {
@@ -52,11 +52,8 @@ try {
 // Prepare everything needed to save the database file
 
 function save(){
-	fs.writeFile(config["database"], JSON.stringify(db), function(err) {
-	    if (err) {
-	        console.error(err);
-	    }
-	});
+	let file_contents = JSON.stringify(db);
+	fs.writeFileSync(config["database"], file_contents);
 }
 
 function save_timer(){
@@ -66,7 +63,7 @@ function save_timer(){
 
 process.on('SIGINT', function() {
     if(config["save-on-ctrlc"]){
-		console.log("CTRL+C detected, saving DB");
+		console.log("\nCTRL+C detected, saving DB");
 		save();
 	}
     process.exit();

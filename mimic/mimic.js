@@ -14,7 +14,7 @@ everything we could ever need.
 module.exports.onMessage = function onMessage(bot, db, message){
 	if(message.text){
 		if(typeof(message.text)==="string"){
-			console.log(message.text);
+			console.log("Got message: \""message.text+"\"");
 		}
 	}
 }

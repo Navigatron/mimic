@@ -15,6 +15,7 @@ module.exports.onMessage = function onMessage(bot, db, message){
 	if(message.text){
 		if(typeof(message.text)==="string"){
 			console.log("Got message: \""message.text+"\"");
+			// This comment is part two of key ignore testing.
 		}
 	}
 }

@@ -1,6 +1,6 @@
 # Mimic Reborn
 
-![](https://imgur.com/vgOA2zo)
+![](https://i.imgur.com/vgOA2zo.png)
 
 Mimic generates new messages in group chats based on past messages.
 

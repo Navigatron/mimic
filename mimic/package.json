@@ -5,6 +5,8 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node ./index.js",
+		"nuke": "rm db.json; rm db.json.backup",
+		"restore": "rm db.json; cp db.json.backup db.json",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Ethan Witherington",

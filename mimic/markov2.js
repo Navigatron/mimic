@@ -66,7 +66,7 @@ function merge_sentence(chain, sentence){
 	for(let i=0; i<words.length; i++){
 		// Increase probability of "prepre:pre"=>words[i]
 		// What is the current state?
-		let current_state = prepre+pre;
+		let current_state = prepre+":"+pre;
 		// What is the next state?
 		let next_state = words[i];
 		// Is the chain lacking an entry for the current state?
@@ -90,7 +90,7 @@ function merge_sentence(chain, sentence){
 		pre = next_state;
 	}
 	// Now, increase the probability of the last two words leading to <END>
-	let current_state = prepre+pre;
+	let current_state = prepre+":"+pre;
 	// Make sure we have an entry for this combination
 	if(!chain[current_state]){
 		chain[current_state] = {
@@ -111,7 +111,7 @@ function merge_sentence(chain, sentence){
 name: generate
 desc: Create a new sentence using this chain
 args: chain - the chain to use
-returns: the sentence that was created.
+returns: the sentence that was created, OR -1 if empty chain
 */
 function generate(chain){
 	let words = ["<START>","<START>"];
@@ -123,6 +123,10 @@ function generate(chain){
 	// Remove the two start tokens.
 	words.shift();
 	words.shift();
+	if(words.length === 0){
+		// generated from empty chain
+		return -1;
+	}
 	// We got words! Put them together, and capitalize the first letter.
 	let sentence = words.join(" ");
 	sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
@@ -137,15 +141,22 @@ args:
 	chain - the chain to generate from
 	words - the array of words so far
 returns:
-	the next word, as a string, OR
-	-1 (number) if there should not be a next word.
+	the next word (String), OR
+	-1 (number) if there should not be a next word, OR
+	-2 (number) if we don't know what to do here.
+
+	-2 should only happen on empty chains - a chain cannot generate a state that it has not learned, so we should be familiar with everything except empty.
 */
 function get_next_word(chain, words){
 	// Get the length of the words array
 	let words_count = words.length;
 	// Calculate the state at the end of the array
-	let current_state = words[words_count-2] + words[words_count-1];
+	let current_state = words[words_count-2] +":"+ words[words_count-1];
 	let possibilities = chain[current_state];
+	// If we've never seen this state before, panic
+	if(!possibilities){
+		return -2;
+	}
 	// Determine the index of the option to take
 	let index = get_random_int(1, possibilities.count);
 	// Do we take the end option?

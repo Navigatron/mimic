@@ -1,5 +1,5 @@
 /*
-file: index.js, but should be called mess.js
+file: index.js
 
 purpose: Build the supporting infrastructure so mimic can function
 Mimic needs:
@@ -35,10 +35,11 @@ try {
 	let file_contents = fs.readFileSync(config.database);
 	db = JSON.parse(file_contents);
 	// If we get here, we've loaded the db.
+	console.log("Database Loaded.");
 	// Make a backup, so if we fuck this up, we can recover.
 	fs.copyFile(config.database, config.database+".backup", (err) => {
 	  if (err) throw err;
-	  console.log('DB Loaded, backup created.');
+	  console.log('Database Backup Created.');
 	});
 } catch (err) {
 	if (err.code === 'ENOENT') {
@@ -54,6 +55,7 @@ try {
 function save(){
 	let file_contents = JSON.stringify(db);
 	fs.writeFileSync(config["database"], file_contents);
+	console.log("Database has been Saved.");
 }
 
 function save_timer(){
@@ -61,15 +63,21 @@ function save_timer(){
 	setTimeout(save_timer, config["auto-save-interval"]*1000);
 }
 
+if(config["save-on-ctrlc"]){
+	console.log("Save on exit is ON - Press CTRL+C to save and exit.");
+}
+
 process.on('SIGINT', function() {
     if(config["save-on-ctrlc"]){
-		console.log("\nCTRL+C detected, saving DB");
+		console.log("\nCTRL+C detected, saving DB...");
 		save();
 	}
+	console.log("Have a nice day!");
     process.exit();
 });
 
 if(config["auto-save"]){
+	console.log("Auto Save is on");
 	setTimeout(save_timer, config["auto-save-interval"]*1000);
 }
 
@@ -78,5 +86,6 @@ let slimboi = new slimbot(key);
 slimboi.on('message', message => {
 	mimic.onMessage(slimboi, db, message);
 });
+console.log("Connecting to Telegram...");
 slimboi.startPolling();
 console.log("All systems go!");
